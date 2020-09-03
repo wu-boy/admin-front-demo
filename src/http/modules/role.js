@@ -23,7 +23,7 @@ export const batchDelete = (data) => {
 // 分页查询
 export const findPage = (data) => {
     return axios({
-        url: '/role/findPage',
+        url: 'v1/roles/page',
         method: 'post',
         data
     })

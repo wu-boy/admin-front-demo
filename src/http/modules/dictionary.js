@@ -23,7 +23,7 @@ export const batchDelete = (data) => {
 // 分页查询
 export const findPage = (data) => {
     return axios({
-        url: '/dict/findPage',
+        url: 'v1/dictionaries/page',
         method: 'post',
         data
     })

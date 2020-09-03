@@ -29,14 +29,6 @@
             @onThemeChange="onThemeChange">
           </theme-picker>
         </el-menu-item>
-        <el-menu-item index="2" v-popover:popover-lang>
-          <!-- 语言切换 -->
-          <li style="color:#fff;" class="fa fa-language fa-lg"></li>
-          <el-popover ref="popover-lang" placement="bottom-start" trigger="click" v-model="langVisible">
-            <div class="lang-item" @click="changeLanguage('zh_cn')">简体中文</div>
-            <div class="lang-item" @click="changeLanguage('en_us')">English</div>
-          </el-popover>
-        </el-menu-item>
         <el-menu-item index="3" v-popover:popover-message>
           <!-- 我的私信 -->
           <el-badge :value="5" :max="99" class="badge">
@@ -57,7 +49,7 @@
         </el-menu-item>
         <el-menu-item index="5" v-popover:popover-personal>
           <!-- 用户信息 -->
-          <span class="user-info"><img :src="user.avatar" />{{user.nickName}}</span>
+          <span class="user-info"><img :src="user.avatar" />{{user.nickname}}</span>
           <el-popover ref="popover-personal" placement="bottom-end" trigger="click" :visible-arrow="false">
             <personal-panel :user="user"></personal-panel>
           </el-popover>
@@ -87,8 +79,7 @@ export default {
     return {
       user: {
       },
-      activeIndex: '1',
-      langVisible: false
+      activeIndex: '1'
     }
   },
   methods: {
@@ -105,12 +96,6 @@ export default {
     // 切换主题
     onThemeChange: function(themeColor) {
       this.$store.commit('setThemeColor', themeColor)
-    },
-    // 语言切换
-    changeLanguage(lang) {
-      lang === '' ? 'zh_cn' : lang
-      this.$i18n.locale = lang
-      this.langVisible = false
     }
   },
   mounted() {

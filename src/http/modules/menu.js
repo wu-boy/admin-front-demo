@@ -21,18 +21,11 @@ export const batchDelete = (data) => {
     })
 }
 // 查找导航菜单树
-export const navTree = (params) => {
+export const tree = (params) => {
     return axios({
-        url: 'v1/menus/navTree',
+        url: 'v1/menus/tree',
         method: 'get',
         params
-    })
-}
-// 查找导航菜单树
-export const findMenuTree = () => {
-    return axios({
-        url: '/menu/findMenuTree',
-        method: 'get'
     })
 }
 

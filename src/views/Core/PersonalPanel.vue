@@ -46,8 +46,7 @@
         </div>    
     </div>
     <div class="personal-footer" @click="logout">
-      <li class="fa fa-sign-out"></li>
-      {{$t("common.logout")}}
+      <li class="fa fa-sign-out"></li>退出登录
     </div>
     <!--修改密码界面-->
     <el-dialog title="修改密码" width="40%" :visible.sync="updatePwdDialogVisible" :close-on-click-modal="false" :modal="false">
@@ -173,7 +172,7 @@ export default {
       .catch(() => {})
     },
     logoutApi() {
-      sessionStorage.removeItem("user")
+      sessionStorage.removeItem("username")
         this.$router.push("/login")
         this.$api.login.logout().then((res) => {
           }).catch(function(res) {

@@ -7,21 +7,17 @@
 				<el-input v-model="filters.name" placeholder="名称"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:menu:view" type="primary" @click="findTreeData(null)"/>
+				<kt-button icon="fa fa-search" label="查询" perms="sys:menu:view" type="primary" @click="findTreeData(null)"/>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:menu:add" type="primary" @click="handleAdd"/>
+				<kt-button icon="fa fa-plus" label="新增" perms="sys:menu:insert" type="primary" @click="handleAdd"/>
 			</el-form-item>
 		</el-form>
 	</div>
 	<!--表格树内容栏-->
     <el-table :data="tableTreeDdata" stripe size="mini" style="width: 100%;"
-      v-loading="loading" rowKey="id" element-loading-text="$t('action.loading')">
-      <el-table-column
-        prop="id" header-align="center" align="center" width="80" label="ID">
-      </el-table-column>
-      <table-tree-column 
-        prop="name" header-align="center" treeKey="id" width="150" label="名称">
+      v-loading="loading" rowKey="id" element-loading-text="拼命加载中">
+      <table-tree-column prop="name" header-align="center" treeKey="id" width="150" label="名称">
       </table-tree-column>
       <el-table-column header-align="center" align="center" label="图标">
         <template slot-scope="scope">
@@ -47,13 +43,13 @@
         :show-overflow-tooltip="true" label="授权标识">
       </el-table-column>
       <el-table-column
-        prop="orderNum" header-align="center" align="center" label="排序">
+        prop="sort" header-align="center" align="center" label="排序">
       </el-table-column>
       <el-table-column
         fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.edit')" perms="sys:menu:edit" @click="handleEdit(scope.row)"/>
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys:menu:delete" type="danger" @click="handleDelete(scope.row)"/>
+          <kt-button icon="fa fa-edit" label="编辑" perms="sys:menu:update" @click="handleEdit(scope.row)"/>
+          <kt-button icon="fa fa-trash" label="删除" perms="sys:menu:delete" type="danger" @click="handleDelete(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -180,7 +176,7 @@ export default {
     // 获取数据
     findTreeData: function() {
       this.loading = true;
-      this.$api.menu.findMenuTree().then(res => {
+      this.$api.menu.tree({'username':null, 'button':true}).then(res => {
         this.tableTreeDdata = res.data;
         this.popupTreeData = this.getParentMenuTree(res.data);
         this.loading = false;

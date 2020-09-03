@@ -7,15 +7,15 @@
 				<el-input v-model="filters.name" placeholder="角色名"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:role:view" type="primary" @click="findPage(null)"/>
+				<kt-button icon="fa fa-search" label="查询" perms="sys:role:view" type="primary" @click="findPage(null)"/>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:role:add" type="primary" @click="handleAdd" />
+				<kt-button icon="fa fa-plus" label="新增" perms="sys:role:insert" type="primary" @click="handleAdd" />
 			</el-form-item>
 		</el-form>
 	</div>
 	<!--表格内容栏-->
-	<kt-table permsEdit="sys:role:edit" permsDelete="sys:role:delete" :highlightCurrentRow="true" :stripe="false"
+	<kt-table permsEdit="sys:role:update" permsDelete="sys:role:delete" :highlightCurrentRow="true" :stripe="false"
 		:data="pageResult" :columns="columns" :showBatchDelete="false" @handleCurrentChange="handleRoleSelectChange"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
@@ -52,9 +52,9 @@
 			<el-checkbox v-model="checkAll" @change="handleCheckAll" :disabled="this.selectRole.id == null"><b>全选</b></el-checkbox>
 		</div>
 		<div style="float:right;padding-right:15px;padding-top:4px;padding-bottom:4px;">
-			<kt-button :label="$t('action.reset')" perms="sys:role:edit" type="primary" @click="resetSelection" 
+			<kt-button label="重置" perms="sys:role:update" type="primary" @click="resetSelection" 
 				:disabled="this.selectRole.id == null"/>
-			<kt-button :label="$t('action.submit')" perms="sys:role:edit" type="primary" @click="submitAuthForm" 
+			<kt-button label="提交" perms="sys:role:update" type="primary" @click="submitAuthForm" 
 				:disabled="this.selectRole.id == null" :loading="authLoading"/>
 		</div>
 	</div>
@@ -79,15 +79,10 @@ export default {
 				name: ''
 			},
 			columns: [
-				{prop:"id", label:"ID", minWidth:50},
 				{prop:"name", label:"角色名", minWidth:120},
-				{prop:"remark", label:"备注", minWidth:120},
-				{prop:"createBy", label:"创建人", minWidth:120},
-				{prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
-				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
+				{prop:"remark", label:"备注", minWidth:120}
 			],
-			pageRequest: { pageNum: 1, pageSize: 10 },
+			pageRequest: { pageNummber: 1, pageSize: 10 },
 			pageResult: {},
 
 			operation: false, // true:新增, false:编辑
@@ -123,7 +118,7 @@ export default {
 			if(data !== null) {
 				this.pageRequest = data.pageRequest
 			}
-			this.pageRequest.params = [{name:'name', value:this.filters.name}]
+			this.pageRequest.name = this.filters.name
 			this.$api.role.findPage(this.pageRequest).then((res) => {
 				this.pageResult = res.data
 				this.findTreeData()
@@ -174,7 +169,7 @@ export default {
 		// 获取数据
 		findTreeData: function () {
 			this.menuLoading = true
-			this.$api.menu.findMenuTree().then((res) => {
+			this.$api.menu.tree({'username':null, 'button':true}).then((res) => {
 				this.menuData = res.data
 				this.menuLoading = false
 			})

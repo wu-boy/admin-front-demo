@@ -7,15 +7,15 @@
 				<el-input v-model="filters.label" placeholder="名称"></el-input>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-search" :label="$t('action.search')" perms="sys:dict:view" type="primary" @click="findPage(null)"/>
+				<kt-button icon="fa fa-search" label="查询" perms="sys:dictionary:view" type="primary" @click="findPage(null)"/>
 			</el-form-item>
 			<el-form-item>
-				<kt-button icon="fa fa-plus" :label="$t('action.add')" perms="sys:dict:add" type="primary" @click="handleAdd" />
+				<kt-button icon="fa fa-plus" label="新增" perms="sys:dictionary:insert" type="primary" @click="handleAdd" />
 			</el-form-item>
 		</el-form>
 	</div>
 	<!--表格内容栏-->
-	<kt-table permsEdit="sys:dict:edit" permsDelete="sys:dict:delete"
+	<kt-table permsEdit="sys:dictionary:update" permsDelete="sys:dictionary:delete"
 		:data="pageResult" :columns="columns" 
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
@@ -68,19 +68,14 @@ export default {
 				label: ''
 			},
 			columns: [
-				{prop:"id", label:"ID", minWidth:50},
 				{prop:"label", label:"名称", minWidth:100},
 				{prop:"value", label:"值", minWidth:100},
 				{prop:"type", label:"类型", minWidth:80},
 				{prop:"sort", label:"排序", minWidth:80},
 				{prop:"description", label:"描述", minWidth:120},
-				{prop:"remarks", label:"备注", minWidth:120},
-				{prop:"createBy", label:"创建人", minWidth:100},
-				{prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
-				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
+				{prop:"remark", label:"备注", minWidth:120}
 			],
-			pageRequest: { pageNum: 1, pageSize: 10 },
+			pageRequest: { pageNumber: 1, pageSize: 10 },
 			pageResult: {},
 
 			operation: false, // true:新增, false:编辑
@@ -109,8 +104,8 @@ export default {
 			if(data !== null) {
 				this.pageRequest = data.pageRequest
 			}
-			this.pageRequest.params = [{name:'label', value:this.filters.label}]
-			this.$api.dict.findPage(this.pageRequest).then((res) => {
+			this.pageRequest.label = this.filters.label
+			this.$api.dictionary.findPage(this.pageRequest).then((res) => {
 				this.pageResult = res.data
 			}).then(data!=null?data.callback:'')
 		},

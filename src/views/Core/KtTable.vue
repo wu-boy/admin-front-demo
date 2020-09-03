@@ -1,28 +1,27 @@
 <template>
   <div>
     <!--表格栏-->
-    <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" 
-          @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="border" :stripe="stripe"
+    <el-table :data="data.rows" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" 
+          @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="拼命加载中" :border="border" :stripe="stripe"
           :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :size="size" :align="align" style="width:100%;" >
       <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column>
       <el-table-column v-for="column in columns" header-align="center" align="center"
         :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
-        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
-        :sortable="column.sortable==null?true:column.sortable">
+        :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter">
       </el-table-column>
-      <el-table-column :label="$t('action.operation')" width="185" fixed="right" v-if="showOperation" header-align="center" align="center">
+      <el-table-column label="操作" width="185" fixed="right" v-if="showOperation" header-align="center" align="center">
         <template slot-scope="scope">
-          <kt-button icon="fa fa-edit" :label="$t('action.edit')" :perms="permsEdit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
-          <kt-button icon="fa fa-trash" :label="$t('action.delete')" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-edit" label="编辑" :perms="permsEdit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
+          <kt-button icon="fa fa-trash" label="删除" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
         </template>
       </el-table-column>
     </el-table>
     <!--分页栏-->
     <div class="toolbar" style="padding:10px;">
-      <kt-button :label="$t('action.batchDelete')" :perms="permsDelete" :size="size" type="danger" @click="handleBatchDelete()" 
+      <kt-button label="批量删除" :perms="permsDelete" :size="size" type="danger" @click="handleBatchDelete()" 
         :disabled="this.selections.length===0" style="float:left;" v-if="showBatchDelete & showOperation"/>
       <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest" 
-        :current-page="pageRequest.pageNum" :page-size="pageRequest.pageSize" :total="data.totalSize" style="float:right;">
+        :current-page="pageRequest.pageNumber" :page-size="pageRequest.pageSize" :total="data.total" style="float:right;">
       </el-pagination>
     </div>
   </div>
@@ -81,7 +80,7 @@ export default {
     return {
       // 分页信息
 			pageRequest: {
-				pageNum: 1,
+				pageNumber: 1,
         pageSize: 9
       },
       loading: false,  // 加载标识
@@ -107,8 +106,8 @@ export default {
       this.$emit('handleCurrentChange', {val:val})
     },
     // 换页刷新
-		refreshPageRequest: function (pageNum) {
-      this.pageRequest.pageNum = pageNum
+		refreshPageRequest: function (pageNumber) {
+      this.pageRequest.pageNumber = pageNumber
       this.findPage()
     },
     // 编辑
